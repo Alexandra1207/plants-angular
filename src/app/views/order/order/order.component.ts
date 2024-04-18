@@ -155,13 +155,6 @@ export class OrderComponent implements OnInit {
         totalAmount: this.totalAmount
       }
 
-      // this.orderService.createOrder(
-      //   {
-      //     deliveryType: this.deliveryType,
-      //     ...this.orderForm.value
-      //   } as OrderType
-      // )
-
       if (this.deliveryType === DeliveryType.delivery) {
         if (this.orderForm.value.street) {
           paramsObject.street = this.orderForm.value.street;

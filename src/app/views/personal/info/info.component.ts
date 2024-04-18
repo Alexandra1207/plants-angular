@@ -23,7 +23,6 @@ export class InfoComponent implements OnInit {
     fatherName: [''],
     phone: [''],
     paymentType: [PaymentType.cashToCourier],
-    // deliveryType: [DeliveryType.delivery],
     email: ['', Validators.required],
     street: [''],
     house: [''],

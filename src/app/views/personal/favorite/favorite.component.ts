@@ -21,21 +21,15 @@ export class FavoriteComponent implements OnInit {
   @Input() countInCart: number | undefined = 0;
   @Input() product!: ProductType;
   @Input() isLight: boolean = false;
-  // isProductInCart = false;
 
-  // isInCart: boolean = false;
 
   constructor(private favoriteService: FavoriteService, private cartService: CartService, private activatedRouter: ActivatedRoute,) {
   }
 
   ngOnInit(): void {
 
-    // this.product.countInCart = this.count;
     if (this.countInCart && this.countInCart > 1) {
-      // this.count = this.product.countInCart !== undefined ? this.product.countInCart : 1;
-      // // this.count = this.product.countInCart;
       this.count = this.countInCart;
-      // console.log(t)
     }
 
     this.favoriteService.getFavorites()
@@ -56,17 +50,6 @@ export class FavoriteComponent implements OnInit {
           throw new Error((data as DefaultResponseType).message);
         }
         this.cart = data as CartType;
-        console.log(this.cart);
-        // this.products.forEach(product => {
-        //   if(this.cart) {
-        //     const cartItem = this.cart.items.find(item => item.product.id === product.id);
-        //     if (cartItem) {
-        //       product.count = cartItem.quantity;
-        //     }
-        //   }
-        // });
-        // this.products = this.products.map(product => ({ ...product, count: 1 }));
-
       })
   }
 
@@ -74,7 +57,6 @@ export class FavoriteComponent implements OnInit {
   getCount(productId: string): number {
     if (this.cart) {
       const item = this.cart.items.find((item) => item.product.id === productId);
-      // console.log(item);
       return item ? item.quantity : 1;
     }
     return 1;
@@ -104,52 +86,16 @@ export class FavoriteComponent implements OnInit {
         this.cart = data as CartType;
       })
   }
-  //
-  // updateCartStatus(id: string) {
-  //   if (this.cart) {
-  //     const isInCart = this.cart.items.some(item => item.product.id === id);
-  //     if (isInCart) {
-  //       this.isProductInCart = true;
-  //     } else {
-  //       this.isProductInCart = false;
-  //     }
-  //   }
-  // }
 
   removeFromCart(id: string) {
     this.cartService.updateCart(id, 0)
       .subscribe((data: CartType | DefaultResponseType) => {
         this.cart = data as CartType;
-
-        // if ((data as DefaultResponseType).error !== undefined) {
-        //   throw new Error((data as DefaultResponseType).message);
-        // }
-        // this.countInCart = 0;
-        // this.count = 1;
-        this.products.forEach(product => {
-          if(this.cart) {
-            const cartItem = this.cart.items.find(item => item.product.id === product.id);
-            if (cartItem) {
-              product.count = cartItem.quantity;
-            }
-          }
-        });
       })
   }
 
   updateCount(id: string, value: number) {
-  // updateCount(value: number) {
     this.count = value;
-  //   this.cartService.updateCart(this.product.id, this.count)
-  //       .subscribe((data: CartType | DefaultResponseType) => {
-  //         this.cart = data as CartType;
-  //         // if ((data as DefaultResponseType).error !== undefined) {
-  //         //   throw new Error((data as DefaultResponseType).message);
-  //         // }
-  //         //
-  //         // this.cart = data as CartType;
-  //
-  //       })
 
     if (this.isInCart(id)) {
       this.cartService.updateCart(id, this.count)
@@ -159,7 +105,6 @@ export class FavoriteComponent implements OnInit {
           }
 
           this.cart = data as CartType;
-          // this.count = this.countInCart(id);
         })
     }
   }

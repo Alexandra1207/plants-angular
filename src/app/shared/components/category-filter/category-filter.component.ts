@@ -58,10 +58,6 @@ export class CategoryFilterComponent implements OnInit {
           this.from = this.activeParams.diameterFrom ? +this.activeParams.diameterFrom : null;
           this.to = this.activeParams.diameterTo ? +this.activeParams.diameterTo : null;
         }
-        // else {
-        //
-        //
-        // }
 
       }
 
@@ -79,7 +75,6 @@ export class CategoryFilterComponent implements OnInit {
       if (existingTypeInParams && !checked) {
         this.activeParams.types = this.activeParams.types.filter(item => item !== url);
       } else if (!existingTypeInParams && checked) {
-        // this.activeParams.types.push(url);
         this.activeParams.types = [...this.activeParams.types, url];
       }
     } else if (checked) {
@@ -89,7 +84,6 @@ export class CategoryFilterComponent implements OnInit {
 
     this.activeParams.page = 1;
     this.router.navigate(['/catalog'], {
-      // queryParams: {types: [url]}
       queryParams: this.activeParams
     })
   }

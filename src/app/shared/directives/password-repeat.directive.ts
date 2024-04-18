@@ -7,8 +7,6 @@ import {AbstractControl, NG_VALIDATORS, ValidationErrors, Validator} from "@angu
 })
 export class PasswordRepeatDirective implements Validator{
 
-  // constructor() { }
-
   validate(control: AbstractControl): ValidationErrors | null {
     const password = control.get('password');
     const passwordRepeat = control.get('passwordRepeat');

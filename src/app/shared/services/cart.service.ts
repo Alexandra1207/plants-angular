@@ -30,9 +30,6 @@ export class CartService {
       .pipe(
         tap(data => {
           if (!data.hasOwnProperty('error')) {
-            //
-            // this.count = (data as {count: number}).count;
-            // this.count$.next(this.count);
 
             this.setCount((data as { count: number }).count);
           }

@@ -5,7 +5,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
 import {CategoryWithTypeType} from "../../../../types/category-with-type.type";
 import {CartService} from "../../services/cart.service";
-import {count, debounceTime} from "rxjs";
+import {debounceTime} from "rxjs";
 import {ProductService} from "../../services/product.service";
 import {ProductType} from "../../../../types/product.type";
 import {environment} from "../../../../environments/environment";
@@ -39,7 +39,6 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.loaderService.show();
 
     this.searchField.valueChanges
       .pipe(
@@ -96,7 +95,6 @@ export class HeaderComponent implements OnInit {
   selectProduct(url: string) {
     this.router.navigate(['/product/' + url]);
     this.searchField.setValue('');
-    // this.searchValue = '';
     this.products = [];
   }
 

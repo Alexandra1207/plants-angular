@@ -35,8 +35,4 @@ export class CountSelectorComponent implements OnInit {
     this.count++;
     this.countChange();
   }
-
-
-
-
 }

@@ -12,7 +12,6 @@ import {OrderStatusUtil} from "../../../shared/utils/order-status.util";
 export class OrdersComponent implements OnInit {
 
   orders: OrderType[] = [];
-  // getStatusAndColor = OrderStatusUtil.getStatusAndColor;
   constructor(private orderService: OrderService) { }
 
   ngOnInit(): void {
