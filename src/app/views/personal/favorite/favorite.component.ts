@@ -21,7 +21,7 @@ export class FavoriteComponent implements OnInit {
   @Input() countInCart: number | undefined = 0;
   @Input() product!: ProductType;
   @Input() isLight: boolean = false;
-  isProductInCart = false;
+  // isProductInCart = false;
 
   // isInCart: boolean = false;
 
@@ -104,17 +104,17 @@ export class FavoriteComponent implements OnInit {
         this.cart = data as CartType;
       })
   }
-
-  updateCartStatus(id: string) {
-    if (this.cart) {
-      const isInCart = this.cart.items.some(item => item.product.id === id);
-      if (isInCart) {
-        this.isProductInCart = true;
-      } else {
-        this.isProductInCart = false;
-      }
-    }
-  }
+  //
+  // updateCartStatus(id: string) {
+  //   if (this.cart) {
+  //     const isInCart = this.cart.items.some(item => item.product.id === id);
+  //     if (isInCart) {
+  //       this.isProductInCart = true;
+  //     } else {
+  //       this.isProductInCart = false;
+  //     }
+  //   }
+  // }
 
   removeFromCart(id: string) {
     this.cartService.updateCart(id, 0)
