@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Observable, Subject, tap} from "rxjs";
 import {environment} from "../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
@@ -11,9 +11,10 @@ import {DefaultResponseType} from "../../../types/default-response.type";
 export class CartService {
 
   private count: number = 0;
-  count$:  Subject<number> = new Subject<number>();
+  count$: Subject<number> = new Subject<number>();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   setCount(count: number) {
     this.count = count;
@@ -24,8 +25,8 @@ export class CartService {
     return this.http.get<CartType | DefaultResponseType>(environment.api + 'cart', {withCredentials: true});
   }
 
-  getCartCount(): Observable<{count: number}  | DefaultResponseType> {
-    return this.http.get<{count: number} | DefaultResponseType>(environment.api + 'cart/count', {withCredentials: true})
+  getCartCount(): Observable<{ count: number } | DefaultResponseType> {
+    return this.http.get<{ count: number } | DefaultResponseType>(environment.api + 'cart/count', {withCredentials: true})
       .pipe(
         tap(data => {
           if (!data.hasOwnProperty('error')) {
@@ -33,14 +34,17 @@ export class CartService {
             // this.count = (data as {count: number}).count;
             // this.count$.next(this.count);
 
-            this.setCount((data as {count: number}).count);
+            this.setCount((data as { count: number }).count);
           }
         })
       );
   }
 
-  updateCart(productId: string, quantity: number): Observable<CartType  | DefaultResponseType> {
-    return this.http.post<CartType  | DefaultResponseType>(environment.api + 'cart', {productId, quantity}, {withCredentials: true})
+  updateCart(productId: string, quantity: number): Observable<CartType | DefaultResponseType> {
+    return this.http.post<CartType | DefaultResponseType>(environment.api + 'cart', {
+      productId,
+      quantity
+    }, {withCredentials: true})
       .pipe(
         tap(data => {
           if (!data.hasOwnProperty('error')) {
@@ -49,7 +53,6 @@ export class CartService {
               count += item.quantity;
             })
             this.setCount(count);
-            // this.count$.next(this.count);
           }
         })
       );

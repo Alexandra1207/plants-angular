@@ -10,8 +10,8 @@ export class LoaderComponent implements OnInit {
 
   constructor(private loaderService: LoaderService) { }
   isShowed: boolean = false;
-  // private isShowed: boolean = false;
-  ngOnInit(): void {
+    ngOnInit(): void {
+
     this.loaderService.isShowed$.subscribe((isShowed: boolean) => {
       this.isShowed = isShowed;
     })

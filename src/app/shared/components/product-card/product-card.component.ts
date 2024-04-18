@@ -19,18 +19,18 @@ export class ProductCardComponent implements OnInit {
 
   @Input() product!: ProductType;
   @Input() isLight: boolean = false;
-  @Input() countInCart: number | undefined= 0;
+  @Input() countInCart: number | undefined = 0;
 
   serverStaticPath = environment.serverStaticPath;
   count: number = 1;
-
-  // isInCart: boolean = false;
 
   constructor(private cartService: CartService,
               private favoriteService: FavoriteService,
               private authService: AuthService,
               private _snackBar: MatSnackBar,
-              private router: Router) { }
+              private router: Router) {
+  }
+
 
   ngOnInit(): void {
     if (this.countInCart && this.countInCart > 1) {
@@ -38,22 +38,28 @@ export class ProductCardComponent implements OnInit {
     }
   }
 
+  getAuthService(): AuthService {
+    return this.authService;
+  }
+
   addToCart() {
     this.cartService.updateCart(this.product.id, this.count)
-      .subscribe((data:CartType | DefaultResponseType) => {
-        if((data as DefaultResponseType).error !== undefined) {
+      .subscribe((data: CartType | DefaultResponseType) => {
+        if ((data as DefaultResponseType).error !== undefined) {
           throw new Error((data as DefaultResponseType).message);
         }
+
         this.countInCart = this.count;
+
       })
   }
 
   updateCount(value: number) {
     this.count = value;
-    if(this.countInCart) {
+    if (this.countInCart) {
       this.cartService.updateCart(this.product.id, this.count)
-        .subscribe((data:CartType | DefaultResponseType) => {
-          if((data as DefaultResponseType).error !== undefined) {
+        .subscribe((data: CartType | DefaultResponseType) => {
+          if ((data as DefaultResponseType).error !== undefined) {
             throw new Error((data as DefaultResponseType).message);
           }
           this.countInCart = this.count;
@@ -64,8 +70,8 @@ export class ProductCardComponent implements OnInit {
 
   removeFromCart() {
     this.cartService.updateCart(this.product.id, 0)
-      .subscribe((data:CartType | DefaultResponseType) => {
-        if((data as DefaultResponseType).error !== undefined) {
+      .subscribe((data: CartType | DefaultResponseType) => {
+        if ((data as DefaultResponseType).error !== undefined) {
           throw new Error((data as DefaultResponseType).message);
         }
         this.countInCart = 0;
@@ -84,7 +90,6 @@ export class ProductCardComponent implements OnInit {
       this.favoriteService.removeFavorite(this.product.id)
         .subscribe((data: DefaultResponseType) => {
           if (data.error) {
-            //
             throw new Error(data.message);
           }
           this.product.isInFavorite = false;

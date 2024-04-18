@@ -51,6 +51,7 @@ export class CartComponent implements OnInit {
   totalCount: number = 0;
 
   ngOnInit(): void {
+
     this.productService.getBestProducts()
       .subscribe((data:ProductType[]) => {
         this.extraProducts = data;
@@ -61,7 +62,6 @@ export class CartComponent implements OnInit {
           throw new Error((data as DefaultResponseType).message);
         }
         this.cart = data as CartType;
-
         this.calculateTotal();
       })
   }
@@ -91,10 +91,5 @@ export class CartComponent implements OnInit {
         })
     }
   }
-
-//   if((data as DefaultResponseType).error !== undefined) {
-//   throw new Error((data as DefaultResponseType).message);
-// }
-
 
 }

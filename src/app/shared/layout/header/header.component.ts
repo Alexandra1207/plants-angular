@@ -1,9 +1,7 @@
 import {Component, HostListener, Input, OnInit} from '@angular/core';
-// import {CategoryType} from "../../../../types/category.type";
 import {AuthService} from "../../../core/auth/auth.service";
 import {DefaultResponseType} from "../../../../types/default-response.type";
 import {MatSnackBar} from "@angular/material/snack-bar";
-// import {HttpErrorResponse} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {CategoryWithTypeType} from "../../../../types/category-with-type.type";
 import {CartService} from "../../services/cart.service";
@@ -12,7 +10,6 @@ import {ProductService} from "../../services/product.service";
 import {ProductType} from "../../../../types/product.type";
 import {environment} from "../../../../environments/environment";
 import {FormControl} from "@angular/forms";
-// import {LoaderService} from "../../services/loader.service";
 
 @Component({
   selector: 'app-header',
@@ -23,7 +20,6 @@ export class HeaderComponent implements OnInit {
 
   searchField = new FormControl();
 
-  // searchValue: string = '';
   count: number = 0;
 
   isLogged: boolean = false;
@@ -38,7 +34,6 @@ export class HeaderComponent implements OnInit {
               private router: Router,
               private cartService: CartService,
               private productService: ProductService,
-              // private loaderService: LoaderService,
   ) {
     this.isLogged = this.authService.getIsLoggedIn();
   }
@@ -71,7 +66,6 @@ export class HeaderComponent implements OnInit {
           throw new Error((data as DefaultResponseType).message);
         }
         this.count = (data as { count: number }).count;
-        // this.cartService.count = data.count;
       })
 
     this.cartService.count$
@@ -99,20 +93,6 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  // changedSearchValue(newValue: string) {
-  //   this.searchValue = newValue;
-  //
-  //   if (this.searchValue && this.searchValue.length > 2) {
-  //     this.productService.searchProducts(this.searchValue)
-  //       .subscribe((data: ProductType[]) => {
-  //         this.products = data;
-  //         this.showedSearch = true;
-  //       })
-  //   } else {
-  //     this.products = [];
-  //   }
-  // }
-
   selectProduct(url: string) {
     this.router.navigate(['/product/' + url]);
     this.searchField.setValue('');
@@ -127,10 +107,4 @@ export class HeaderComponent implements OnInit {
       this.searchField.setValue('');
     }
   }
-
-  // changeShowedSearch(value: boolean) {
-  //   setTimeout(() => {
-  //     this.showedSearch =value;
-  //   }, 100)
-  // }
 }

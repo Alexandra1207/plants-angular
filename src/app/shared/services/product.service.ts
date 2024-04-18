@@ -29,6 +29,4 @@ export class ProductService {
   searchProducts(query: string): Observable<ProductType[]> {
     return this.http.get<ProductType[]>(environment.api + 'products/search?query=' + query);
   }
-
-
 }

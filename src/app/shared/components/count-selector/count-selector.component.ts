@@ -23,17 +23,10 @@ export class CountSelectorComponent implements OnInit {
 
   }
 
-  // countChange(value: number) {
-  //   this.count = value;
-  //   this.onCountChange.emit(value);
-  //   // this.onCountChange.emit(this.count);
-  // }
-
   decreaseCount() {
     if (this.count > 1) {
       this.count--;
       this.countChange();
-      // this.countChange(this.count);
     }
   }
 
@@ -41,7 +34,9 @@ export class CountSelectorComponent implements OnInit {
   increaseCount() {
     this.count++;
     this.countChange();
-    // this.countChange(this.count);
-
   }
+
+
+
+
 }

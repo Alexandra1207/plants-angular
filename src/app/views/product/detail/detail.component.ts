@@ -50,6 +50,7 @@ export class DetailComponent implements OnInit {
                 if (productInCart) {
                   this.product.countInCart = productInCart.quantity;
                   this.count = this.product.countInCart;
+
                 }
               }
 
@@ -82,6 +83,10 @@ export class DetailComponent implements OnInit {
       .subscribe((data: ProductType[]) => {
         this.recommendedProducts = data;
       })
+  }
+
+  getAuthService(): AuthService {
+    return this.authService;
   }
 
   customOptions: OwlOptions = {
@@ -131,8 +136,8 @@ export class DetailComponent implements OnInit {
         if((data as DefaultResponseType).error !== undefined) {
           throw new Error((data as DefaultResponseType).message);
         }
+        console.log(this.count);
         this.product.countInCart = this.count;
-        // this.cartService.count = this.count;
       })
   }
 
@@ -159,7 +164,6 @@ export class DetailComponent implements OnInit {
         this.favoriteService.removeFavorite(this.product.id)
           .subscribe((data: DefaultResponseType) => {
             if (data.error) {
-              //
               throw new Error(data.message);
             }
             this.product.isInFavorite = false;
