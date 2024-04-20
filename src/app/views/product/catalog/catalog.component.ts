@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, HostListener, OnInit} from '@angular/core';
 import {ProductService} from "../../../shared/services/product.service";
 import {ProductType} from "../../../../types/product.type";
 import {CategoryService} from "../../../shared/services/category.service";
@@ -27,13 +27,13 @@ export class CatalogComponent implements OnInit {
   categoriesWithTypes: CategoryWithTypeType[] = [];
   activeParams: ActiveParamsType = {types: []};
   appliedFilters: AppliedFilterType[] = [];
-  sortingOpen = false;
-  sortingOptions: { name: string, value: string }[] = [
-    {name: 'От А до Я', value: 'az-asc'},
-    {name: 'От Я до А', value: 'az-desc'},
-    {name: 'По возрастанию цены', value: 'price-asc'},
-    {name: 'По убыванию цены', value: 'price-desc'},
-  ];
+  // sortingOpen = false;
+  // sortingOptions: { name: string, value: string }[] = [
+  //   {name: 'От А до Я', value: 'az-asc'},
+  //   {name: 'От Я до А', value: 'az-desc'},
+  //   {name: 'По возрастанию цены', value: 'price-asc'},
+  //   {name: 'По убыванию цены', value: 'price-desc'},
+  // ];
   pages: number[] = [];
   cart: CartType | null = null;
   favoriteProducts: FavoriteType[] | null = null;
@@ -44,7 +44,8 @@ export class CatalogComponent implements OnInit {
               private router: Router,
               private cartService: CartService,
               private favoriteService: FavoriteService,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private elementRef: ElementRef) {
   }
 
   ngOnInit(): void {
@@ -185,9 +186,24 @@ export class CatalogComponent implements OnInit {
     })
   }
 
-  toggleSorting() {
-    this.sortingOpen = !this.sortingOpen;
-  }
+  // @HostListener('document:click', ['$event'])
+  // clickOutside(event: Event) {
+  //   if (!this.elementRef.nativeElement.contains(event.target)) {
+  //     this.sortingOpen = false;
+  //   }
+  // }
+
+  // @HostListener('document:click', ['$event'])
+  // onClickOutside(event: Event) {
+  //   if (event.target && !!(event.target as HTMLElement).closest('.catalog-sorting')) {
+  //     return;
+  //   }
+  //   this.sortingOpen = false;
+  // }
+
+  // toggleSorting() {
+  //   this.sortingOpen = !this.sortingOpen;
+  // }
 
   sort(value: string) {
     this.activeParams.sort = value;
