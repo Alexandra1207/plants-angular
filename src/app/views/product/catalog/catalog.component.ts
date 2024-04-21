@@ -27,13 +27,6 @@ export class CatalogComponent implements OnInit {
   categoriesWithTypes: CategoryWithTypeType[] = [];
   activeParams: ActiveParamsType = {types: []};
   appliedFilters: AppliedFilterType[] = [];
-  // sortingOpen = false;
-  // sortingOptions: { name: string, value: string }[] = [
-  //   {name: 'От А до Я', value: 'az-asc'},
-  //   {name: 'От Я до А', value: 'az-desc'},
-  //   {name: 'По возрастанию цены', value: 'price-asc'},
-  //   {name: 'По убыванию цены', value: 'price-desc'},
-  // ];
   pages: number[] = [];
   cart: CartType | null = null;
   favoriteProducts: FavoriteType[] | null = null;
@@ -44,11 +37,11 @@ export class CatalogComponent implements OnInit {
               private router: Router,
               private cartService: CartService,
               private favoriteService: FavoriteService,
-              private authService: AuthService,
-              private elementRef: ElementRef) {
+              private authService: AuthService) {
   }
 
   ngOnInit(): void {
+
     this.cartService.getCart()
       .subscribe((data: CartType | DefaultResponseType) => {
 
@@ -72,6 +65,7 @@ export class CatalogComponent implements OnInit {
                   this.favoriteProducts = data as FavoriteType[];
                   this.processCatalog();
 
+
                 },
                 error: (error) => {
                   this.processCatalog();
@@ -85,89 +79,106 @@ export class CatalogComponent implements OnInit {
   }
 
   processCatalog() {
+    if (this.pages.length > 1) {
+      this.activeParams.page = 1;
 
-      this.categoryService.getCategoriesWithTypes()
-        .subscribe(data => {
-          this.categoriesWithTypes = data;
+      this.router.navigate(['/catalog'], {
+        queryParams: this.activeParams
+      })
+    }
+    this.categoryService.getCategoriesWithTypes()
+      .subscribe(data => {
+        this.categoriesWithTypes = data;
 
-          this.activatedRouter.queryParams
-            .pipe(
-              debounceTime(500)
-            )
-            .subscribe(params => {
-              this.activeParams = ActiveParamsUtil.processParams(params);
-              this.appliedFilters = [];
-              this.activeParams.types.forEach(url => {
-                for (let i = 0; i < this.categoriesWithTypes.length; i++) {
-                  const foundType = this.categoriesWithTypes[i].types.find(type => type.url === url);
-                  if (foundType) {
-                    this.appliedFilters.push({
-                      name: foundType.name,
-                      urlParam: foundType.url
-                    });
-                  }
+        this.activatedRouter.queryParams
+          .pipe(
+            debounceTime(500)
+          )
+          .subscribe(params => {
+
+            this.activeParams = ActiveParamsUtil.processParams(params);
+            this.appliedFilters = [];
+
+            this.activeParams.types.forEach(url => {
+              for (let i = 0; i < this.categoriesWithTypes.length; i++) {
+                const foundType = this.categoriesWithTypes[i].types.find(type => type.url === url);
+                if (foundType) {
+                  this.appliedFilters.push({
+                    name: foundType.name,
+                    urlParam: foundType.url
+                  });
+                }
+              }
+            });
+
+            if (this.activeParams.heightFrom) {
+              this.appliedFilters.push({
+                name: 'Высота: от ' + this.activeParams.heightFrom + ' см',
+                urlParam: 'heightFrom'
+              });
+            }
+            if (this.activeParams.heightTo) {
+              this.appliedFilters.push({
+                name: 'Высота: до ' + this.activeParams.heightTo + ' см',
+                urlParam: 'heightTo'
+              });
+            }
+            if (this.activeParams.diameterFrom) {
+              this.appliedFilters.push({
+                name: 'Диаметр: от ' + this.activeParams.diameterFrom + ' см',
+                urlParam: 'diameterFrom'
+              });
+            }
+            if (this.activeParams.diameterTo) {
+              this.appliedFilters.push({
+                name: 'Диаметр: до ' + this.activeParams.diameterTo + ' см',
+                urlParam: 'diameterTo'
+              });
+            }
+            this.productService.getProducts(this.activeParams)
+              .subscribe(data => {
+                this.pages = [];
+                for (let i = 1; i <= data.pages; i++) {
+                  this.pages.push(i);
+                }
+
+                ///////////////////
+                if (this.pages.length > 1 && !params['page']) {
+                  this.activeParams.page = 1;
+
+                  this.router.navigate(['/catalog'], {
+                    queryParams: this.activeParams
+                  })
+                }
+                /////////////////
+                if (this.cart && this.cart.items.length > 0) {
+
+                  this.products = data.items.map(product => {
+                    if (this.cart) {
+                      const productInCart = this.cart.items.find(item => item.product.id === product.id)
+                      if (productInCart) {
+                        product.countInCart = productInCart.quantity;
+                      }
+                    }
+                    return product;
+                  })
+
+                } else {
+                  this.products = data.items;
+                }
+
+                if (this.favoriteProducts) {
+                  this.products = this.products.map(product => {
+                    const productInFavorite = this.favoriteProducts?.find(item => item.id === product.id);
+                    if (productInFavorite) {
+                      product.isInFavorite = true;
+                    }
+                    return product;
+                  })
                 }
               });
-
-              if (this.activeParams.heightFrom) {
-                this.appliedFilters.push({
-                  name: 'Высота: от ' + this.activeParams.heightFrom + ' см',
-                  urlParam: 'heightFrom'
-                });
-              }
-              if (this.activeParams.heightTo) {
-                this.appliedFilters.push({
-                  name: 'Высота: до ' + this.activeParams.heightTo + ' см',
-                  urlParam: 'heightTo'
-                });
-              }
-              if (this.activeParams.diameterFrom) {
-                this.appliedFilters.push({
-                  name: 'Диаметр: от ' + this.activeParams.diameterFrom + ' см',
-                  urlParam: 'diameterFrom'
-                });
-              }
-              if (this.activeParams.diameterTo) {
-                this.appliedFilters.push({
-                  name: 'Диаметр: до ' + this.activeParams.diameterTo + ' см',
-                  urlParam: 'diameterTo'
-                });
-              }
-              this.productService.getProducts(this.activeParams)
-                .subscribe(data => {
-                  this.pages = [];
-                  for (let i = 1; i <= data.pages; i++) {
-                    this.pages.push(i);
-                  }
-
-                  if (this.cart && this.cart.items.length > 0) {
-
-                    this.products = data.items.map(product => {
-                      if (this.cart) {
-                        const productInCart = this.cart.items.find(item => item.product.id === product.id)
-                        if (productInCart) {
-                          product.countInCart = productInCart.quantity;
-                        }
-                      }
-                      return product;
-                    })
-
-                  } else {
-                    this.products = data.items;
-                  }
-
-                  if (this.favoriteProducts) {
-                    this.products = this.products.map(product => {
-                      const productInFavorite = this.favoriteProducts?.find(item => item.id === product.id);
-                      if (productInFavorite) {
-                        product.isInFavorite = true;
-                      }
-                      return product;
-                    })
-                  }
-                });
-            })
-        })
+          })
+      })
 
   }
 
@@ -181,32 +192,6 @@ export class CatalogComponent implements OnInit {
 
     this.activeParams.page = 1;
 
-    this.router.navigate(['/catalog'], {
-      queryParams: this.activeParams
-    })
-  }
-
-  // @HostListener('document:click', ['$event'])
-  // clickOutside(event: Event) {
-  //   if (!this.elementRef.nativeElement.contains(event.target)) {
-  //     this.sortingOpen = false;
-  //   }
-  // }
-
-  // @HostListener('document:click', ['$event'])
-  // onClickOutside(event: Event) {
-  //   if (event.target && !!(event.target as HTMLElement).closest('.catalog-sorting')) {
-  //     return;
-  //   }
-  //   this.sortingOpen = false;
-  // }
-
-  // toggleSorting() {
-  //   this.sortingOpen = !this.sortingOpen;
-  // }
-
-  sort(value: string) {
-    this.activeParams.sort = value;
     this.router.navigate(['/catalog'], {
       queryParams: this.activeParams
     })

@@ -23,6 +23,8 @@ export class ActiveParamsUtil {
       activeParams.diameterTo = params['diameterTo'];
     }
 
+
+
     if (params.hasOwnProperty('sort')) {
       activeParams.sort = params['sort'];
     }
